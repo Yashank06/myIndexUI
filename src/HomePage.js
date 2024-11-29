@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./HomePage.css";
 
+const API_BASE_URL = "https://myindex-production.up.railway.app";
+
 const HomePage = () => {
   const [formData, setFormData] = useState({
     stockName: "",
@@ -25,7 +27,7 @@ const HomePage = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8080/myIndex/myStock",
+        `${API_BASE_URL}/myIndex/myStock`,
         formData,
         {
           headers: { "Content-Type": "application/json" },

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
+const API_BASE_URL = "https://myindex-production.up.railway.app";
+
 const StockInfoPage = () => {
   const { symbol } = useParams(); // Extract symbol from URL
   const [stockInfo, setStockInfo] = useState(null);
@@ -20,7 +22,7 @@ const StockInfoPage = () => {
       try {
         setError('');
         // Fetch stock information once
-        const stockInfoResponse = await axios.get(`http://localhost:8080/myIndex/myStock/${symbol}`);
+        const stockInfoResponse = await axios.get(`${API_BASE_URL}/myIndex/myStock/${symbol}`);
         console.log('Fetched stock info:', stockInfoResponse.data); // Debugging stock info API
         setStockInfo(stockInfoResponse.data);
       } catch (err) {
@@ -36,7 +38,7 @@ const StockInfoPage = () => {
     const fetchStockPrice = async () => {
       try {
         // Fetch the stock price
-        const stockPriceResponse = await axios.get(`http://localhost:8080/myIndex/stockPrice/${symbol}`);
+        const stockPriceResponse = await axios.get(`${API_BASE_URL}/myIndex/stockPrice/${symbol}`);
         const price = stockPriceResponse.data.currPrice;
         setStockPrice(price);
 

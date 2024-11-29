@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import'./StockHeatMap.css';
 
+const API_BASE_URL = "https://myindex-production.up.railway.app";
+
 const StockHeatMap = () => {
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,13 +12,13 @@ const StockHeatMap = () => {
   // Fetch stock data with current prices
   const fetchStockPrices = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:8080/myIndex/myAllStocks");
+      const response = await axios.get(`${API_BASE_URL}/myIndex/myAllStocks`);
       const stocksData = response.data;
 
       // Fetch stock prices
       const pricePromises = stocksData.map(stock =>
         axios
-          .get(`http://localhost:8080/myIndex/stockPrice/${stock.stockSymbol}`)
+          .get(`${API_BASE_URL}/myIndex/stockPrice/${stock.stockSymbol}`)
           .then(response => ({ symbol: stock.stockSymbol, price: response.data.currPrice }))
           .catch(err => ({ symbol: stock.stockSymbol, price: null }))
       );
@@ -38,7 +40,7 @@ const StockHeatMap = () => {
 
   useEffect(() => {
     fetchStockPrices();
-    const interval = setInterval(fetchStockPrices, 60000);
+    const interval = setInterval(fetchStockPrices, 600000);
     return () => clearInterval(interval); // Clear interval when component unmounts
   }, [fetchStockPrices]);
 
