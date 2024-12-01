@@ -1,18 +1,24 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './HomePage';
+import HeaderNav from './component/HeaderNav';
+import Footer from './component/Footer';
 import StockInfoPage from './StockInfoPage';
 import StockHeatmap from './StockHeatMap';
+import HomePage from './component/HomePage';
 
 const App = () => {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        {/* Route with symbol parameter */}
-        <Route path="/stocks/:symbol" element={<StockInfoPage />} />
-        <Route path="/heatmap" element={<StockHeatmap />} />
-      </Routes>
+      <HeaderNav /> {/* Include HeaderNav for navigation */}
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/stocks/:symbol" element={<StockInfoPage />} />
+          <Route path="/heatmap" element={<StockHeatmap />} />
+          <Route path="/news" element={<div>Market News Coming Soon</div>} />
+        </Routes>
+      </main>
+      <Footer /> {/* Include Footer for consistent layout */}
     </Router>
   );
 };

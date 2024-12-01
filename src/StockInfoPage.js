@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { PieChart, Pie, Cell } from 'recharts';
+import './StockInfoPage.css'; // Import the CSS file
 
 const API_BASE_URL = "https://myindex-production.up.railway.app";
 
@@ -9,10 +11,10 @@ const StockInfoPage = () => {
   const [stockInfo, setStockInfo] = useState(null);
   const [stockPrice, setStockPrice] = useState(null);
   const [error, setError] = useState('');
-  const [bgColor, setBgColor] = useState('yellow'); // Default background color
 
   // Helper function to check range
   const isInRange = (price, range) => {
+    if (!range) return false;
     const [low, high] = range.split('-').map(Number);
     return price >= low && price <= high;
   };
@@ -23,7 +25,6 @@ const StockInfoPage = () => {
         setError('');
         // Fetch stock information once
         const stockInfoResponse = await axios.get(`${API_BASE_URL}/myIndex/myStock/${symbol}`);
-        console.log('Fetched stock info:', stockInfoResponse.data); // Debugging stock info API
         setStockInfo(stockInfoResponse.data);
       } catch (err) {
         setError('Error fetching stock data. Please check the symbol and try again.');
@@ -39,59 +40,84 @@ const StockInfoPage = () => {
       try {
         // Fetch the stock price
         const stockPriceResponse = await axios.get(`${API_BASE_URL}/myIndex/stockPrice/${symbol}`);
-        const price = stockPriceResponse.data.currPrice;
-        setStockPrice(price);
-
-        // Update background color based on price range
-        if (stockInfo) {
-          if (isInRange(price, stockInfo.buyRange)) {
-            setBgColor('green'); // Buy range
-          } else if (isInRange(price, stockInfo.sellRange)) {
-            setBgColor('red'); // Sell range
-          } else {
-            setBgColor('yellow'); // Default
-          }
-        }
+        setStockPrice(stockPriceResponse.data.currPrice);
       } catch (err) {
         console.error('Error fetching stock price:', err);
       }
     };
 
-    // Fetch the price immediately and then every 2 seconds
+    // Fetch the price immediately and then every 5 seconds
     fetchStockPrice();
-    const interval = setInterval(fetchStockPrice, 500000);
+    const interval = setInterval(fetchStockPrice, 5000);
 
     // Clear the interval on component unmount
     return () => clearInterval(interval);
-  }, [symbol, stockInfo]);
+  }, [symbol]);
+
+  // Determine pie chart colors dynamically
+  const getPieColors = () => {
+    if (!stockInfo || stockPrice === null) return ["#FFB700", "#FFB700"]; // Default Yellow
+    if (isInRange(stockPrice, stockInfo.buyRange)) return ["#4CAF50", "#f5f5f5"]; // Green for buy range
+    if (isInRange(stockPrice, stockInfo.sellRange)) return ["#F44336", "#f5f5f5"]; // Red for sell range
+    return ["#FFB700", "#FFB700"]; // Default Yellow
+  };
+
+  const pieData = stockInfo ? [
+    { value: stockInfo.yearlyRating || 0 },
+    { value: 100 - (stockInfo.yearlyRating || 0) }
+  ] : [];
 
   return (
-    <div style={{ backgroundColor: bgColor, padding: '20px', minHeight: '100vh' }}>
-      <h1>Stock Information</h1>
-      <h2>Symbol: {symbol}</h2>
-
+    <div className="container">
       {/* Error Message */}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
+
+      {/* Stock Performance Chart */}
+      <div className="pie-container">
+        <PieChart width={200} height={200}>
+          <Pie
+            data={pieData}
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={80}
+            dataKey="value"
+          >
+            {pieData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={getPieColors()[index]} />
+            ))}
+          </Pie>
+        </PieChart>
+        {stockInfo && (
+          <div className="chart-text">
+            <strong>{symbol}</strong>
+            <br />
+            ₹{stockPrice !== null ? stockPrice : 'Loading...'}
+          </div>
+        )}
+      </div>
 
       {/* Stock Info Display */}
       {stockInfo && (
-        <div>
-          <h2>Stock Details</h2>
-          <p><strong>Name:</strong> {stockInfo.stockName}</p>
-          <p><strong>Industry:</strong> {stockInfo.industryType}</p>
-          <p><strong>Market Cap:</strong> {stockInfo.mktCap}</p>
-          <p><strong>Sell Range:</strong> {stockInfo.sellRange}</p>
-          <p><strong>Buy Range:</strong> {stockInfo.buyRange}</p>
-          <p><strong>Yearly Rating:</strong> {stockInfo.yearlyRating}</p>
-          <p><strong>Quarterly Rating:</strong> {stockInfo.qtrRating}</p>
+        <div className="info-cards-container">
+          <div className="card">
+            <p>Industry</p>
+            <h4>{stockInfo.industryType}</h4>
+          </div>
+          <div className="card">
+            <p>Market Cap</p>
+            <h4>{stockInfo.mktCap}</h4>
+          </div>
+          <div className="card">
+            <p>Sell Range</p>
+            <h4>{stockInfo.sellRange}</h4>
+          </div>
+          <div className="card">
+            <p>Buy Range</p>
+            <h4>{stockInfo.buyRange}</h4>
+          </div>
         </div>
       )}
-
-      {/* Stock Price Display */}
-      <div>
-        <h2>Current Stock Price</h2>
-        <p><strong>Price:</strong> ₹{stockPrice !== null ? stockPrice : 'Loading...'}</p>
-      </div>
     </div>
   );
 };

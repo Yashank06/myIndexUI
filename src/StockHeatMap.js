@@ -56,7 +56,7 @@ const StockHeatMap = () => {
     } else if (stock.currentPrice >= sellLow && stock.currentPrice <= sellHigh) {
       return "green"; // Sell range
     } else {
-      return "yellow"; // Neutral
+      return "#FFB700"; // Neutral
     }
   };
 
@@ -65,8 +65,7 @@ const StockHeatMap = () => {
   }
 
   return (
-    <div>
-      <h1>Stock Heatmap</h1>
+    <div className="heatmap">
       <div className="heatmap-container">
         {stocks.map((stock) => (
           <Link to={`/stocks/${stock.stockSymbol}`} key={stock.stockSymbol}>
