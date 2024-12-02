@@ -44,4 +44,69 @@
   .error-message {
     color: red;
   }
+
+  .news-section {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .news-section h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .news-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  
+  .news-thumbnail img {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    object-fit: cover;
+    margin-right: 15px;
+  }
+  
+  .news-content {
+    flex: 1;
+  }
+  
+  .news-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    color: #0073e6;
+  }
+  
+  .news-title a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .news-title a:hover {
+    text-decoration: underline;
+  }
+  
+  .news-source,
+  .news-date {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0;
+  }
   

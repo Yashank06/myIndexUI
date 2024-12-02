@@ -11,6 +11,7 @@ const StockInfoPage = () => {
   const [stockInfo, setStockInfo] = useState(null);
   const [stockPrice, setStockPrice] = useState(null);
   const [error, setError] = useState('');
+  const [newsArticles, setNewsArticles] = useState([]);
 
   // Helper function to check range
   const isInRange = (price, range) => {
@@ -53,6 +54,29 @@ const StockInfoPage = () => {
     // Clear the interval on component unmount
     return () => clearInterval(interval);
   }, [symbol]);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        if (stockInfo && stockInfo.stockName) {
+          const stockNameWithStock = `${stockInfo.stockName} stock`;
+          const endpoint = `${API_BASE_URL}/myIndex/news/${stockNameWithStock}`;
+          console.log("Fetching news from:", endpoint);
+          const newsResponse = await axios.get(endpoint);
+          console.log("News response:", newsResponse.data);
+          setNewsArticles(newsResponse.data || []);
+        }
+      } catch (err) {
+        console.error('Error fetching news:', err);
+      }
+    };
+  
+    fetchNews();
+  }, [stockInfo]);
+  
+  const sortedArticles = [...newsArticles].sort(
+    (a, b) => new Date(b.publishedTime) - new Date(a.publishedTime)
+  );
 
   // Determine pie chart colors dynamically
   const getPieColors = () => {
@@ -118,6 +142,36 @@ const StockInfoPage = () => {
           </div>
         </div>
       )}
+      
+      <div className="news-section">
+      <h3>Latest News...</h3>
+      <div className="news-list">
+        {sortedArticles.length > 0 ? (
+          sortedArticles.map((article, index) => (
+            <div className="news-item" key={index}>
+              <div className="news-thumbnail">
+                
+              </div>
+              <div className="news-content">
+                <h4 className="news-title">
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {article.title}
+                  </a>
+                </h4>
+                <p className="news-source">Source: "{article.source}"</p>
+                <p className="news-date">{article.publishedTime.split("T")[0]}</p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No news available at the moment.</p>
+        )}
+      </div>
+    </div>
     </div>
   );
 };
