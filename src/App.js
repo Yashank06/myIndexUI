@@ -16,7 +16,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/stocks/:symbol" element={<StockInfoPage />} />
           <Route path="/heatmap" element={<StockHeatmap />} />
-          <Route path="/news" element={<div>Market News Coming Soon</div>} />
+          <Route path="/news" element={<div className="div-center">Market News Coming Soon</div>} />
           <Route path="/StockFileUpload" element={<StockFileUpload />} />
         </Routes>
       </main>

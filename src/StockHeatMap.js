@@ -61,7 +61,7 @@ const StockHeatMap = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="div-center">Loading...</div>;
   }
 
   return (

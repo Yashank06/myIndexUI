@@ -88,6 +88,7 @@
     }
   
     .stock-form input[type="file"], .stock-form button[type="submit"] {
-      width: 100%;
+      width: 96%;
+      margin: 10px auto;
     }
   }
