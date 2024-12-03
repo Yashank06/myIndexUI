@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import debounce from "lodash.debounce";
 
 const API_BASE_URL = "https://myindex-production.up.railway.app";
 
@@ -17,10 +18,58 @@ const HomePage = () => {
 
   const [responseMessage, setResponseMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const handleChange = (e) => {
+  const debouncedFetchSuggestions = debounce(async (value) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/myIndex/stocks/search?name=${value}`);
+      if (Array.isArray(response.data)) {
+        setSuggestions(response.data);
+      } else {
+        console.error("Unexpected response format:", response.data);
+        setSuggestions([]);
+      }
+      setShowSuggestions(true);
+    } catch (error) {
+      console.error("Error fetching stock suggestions:", error);
+      setSuggestions([]);
+    }
+  }, 300);
+
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    // Clear other fields if stockName is empty
+    if (name === "stockName" && value.trim() === "") {
+      setFormData({
+        stockName: "",
+        stockSymbol: "",
+        industryType: "",
+        mktCap: "",
+      });
+      setSuggestions([]);  // Clear suggestions when stockName is empty
+      setShowSuggestions(false); // Hide suggestions
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+
+    if (name === "stockName" && value.trim().length >= 1) {
+      debouncedFetchSuggestions(value);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setFormData({
+      ...formData,
+      stockName: suggestion.stockName,
+      stockSymbol: suggestion.stockSymbol,
+      industryType: suggestion.industryType,
+      mktCap: suggestion.marketCap,
+    });
+    setShowSuggestions(false);
   };
 
   const handleSubmit = async (e) => {
@@ -36,10 +85,26 @@ const HomePage = () => {
       setResponseMessage("Stock successfully registered!");
       console.log("Response:", response.data);
       setShowPopup(true);
+      resetForm();
     } catch (error) {
       setResponseMessage("Error registering stock. Please try again.");
       console.error("Error:", error);
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      stockName: "",
+      stockSymbol: "",
+      industryType: "",
+      mktCap: "",
+      sellRange: "",
+      buyRange: "",
+      yearlyRating: "",
+      qtrRating: "",
+    });
+    setSuggestions([]);
+    setShowSuggestions(false);
   };
 
   const closePopup = () => {
@@ -48,88 +113,84 @@ const HomePage = () => {
 
   return (
     <div>
-    <form className="form-container" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="text"
-              name="stockName"
-              placeholder="Stock Name"
-              value={formData.stockName}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              name="stockSymbol"
-              placeholder="Stock Symbol"
-              value={formData.stockSymbol}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="industryType">Industry Type</label>
-            <select
-              id="industryType"
-              name="industryType"
-              value={formData.industryType}
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled>Select Industry</option>
-              <option value="Finance">Finance</option>
-              <option value="Information Technology">Information Technology</option>
-              <option value="Healthcare">Healthcare</option>
-              <option value="Consumer Goods">Consumer Goods</option>
-              <option value="Energy">Energy</option>
-              <option value="Automobile">Automobile</option>
-              <option value="Telecommunication">Telecommunication</option>
-              <option value="Pharmaceuticals">Pharmaceuticals</option>
-              <option value="Real Estate">Real Estate</option>
-              <option value="Metals and Mining">Metals and Mining</option>
-              <option value="Media and Entertainment">Media and Entertainment</option>
-              <option value="Retail">Retail</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <input
-              type="number"
-              name="mktCap"
-              placeholder="Market Cap"
-              value={formData.mktCap}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              name="buyRange"
-              placeholder="Buy Range (Ex - 110-120)"
-              value={formData.buyRange}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              name="sellRange"
-              placeholder="Sell Range (Ex - 150-160)"
-              value={formData.sellRange}
-              onChange={handleChange}
-              required
-            />
-          </div>
+      <form className="form-container" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <input
+            type="text"
+            name="stockName"
+            placeholder="Stock Name"
+            value={formData.stockName}
+            onChange={handleInputChange}
+            required
+            aria-label="Enter Stock Name"
+          />
+          {showSuggestions && (
+            <ul className="suggestions-list">
+              {suggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSuggestionClick(suggestion)}
+                  tabIndex={0} // Accessibility
+                >
+                  {suggestion.stockName}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="stockSymbol"
+            placeholder="Stock Symbol"
+            value={formData.stockSymbol}
+            readOnly
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="industryType"
+            placeholder="Industry Type"
+            value={formData.industryType}
+            readOnly
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="mktCap"
+            placeholder="Market Cap"
+            value={formData.mktCap}
+            readOnly
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="sellRange"
+            placeholder="Sell Range"
+            value={formData.sellRange}
+            onChange={(e) => setFormData({ ...formData, sellRange: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="buyRange"
+            placeholder="Buy Range"
+            value={formData.buyRange}
+            onChange={(e) => setFormData({ ...formData, buyRange: e.target.value })}
+          />
+        </div>
           <div className="form-group">
             <label htmlFor="yearlyRating">Yearly Rating</label>
             <select
               id="yearlyRating"
               name="yearlyRating"
               value={formData.yearlyRating}
-              onChange={handleChange}
+              onChange={handleInputChange}
               required
             >
               <option value="" disabled>Select Rating</option>
@@ -146,7 +207,7 @@ const HomePage = () => {
               id="qtrRating"
               name="qtrRating"
               value={formData.qtrRating}
-              onChange={handleChange}
+              onChange={handleInputChange}
               required
             >
               <option value="" disabled>Select Rating</option>

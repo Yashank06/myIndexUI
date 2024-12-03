@@ -179,3 +179,39 @@ nav a.active {
 .close-btn:hover {
   background: #c0392b;
 }
+
+/* Style for the suggestions list */
+.suggestions-list {
+  position: absolute;
+  z-index: 1000;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  /* width: 100%; */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 4px;
+  padding: 0;
+  list-style-type: none;
+}
+
+/* Style for each suggestion item */
+.suggestions-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Hover effect on suggestion items */
+.suggestions-list li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Highlight the selected item */
+.suggestions-list li.selected {
+  background-color: #d6e9ff;
+  font-weight: bold;
+}
