@@ -129,7 +129,7 @@ const StockInfoPage = () => {
             <h4>{stockInfo.industryType}</h4>
           </div>
           <div className="card">
-            <p>Market Cap</p>
+            <p>Market Cap (Cr)</p>
             <h4>{stockInfo.mktCap}</h4>
           </div>
           <div className="card">

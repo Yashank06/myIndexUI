@@ -114,6 +114,8 @@ nav a.active {
 
 .footer-icons {
   margin-top: 10px;
+  width: 50px;
+  margin: auto;
 }
 
 .footer-icons a{
