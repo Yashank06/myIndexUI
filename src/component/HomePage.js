@@ -156,19 +156,19 @@ const HomePage = () => {
         <div className="form-group">
           <input
             type="text"
-            name="sellRange"
-            placeholder="Sell Range"
-            value={formData.sellRange}
-            onChange={(e) => setFormData({ ...formData, sellRange: e.target.value })}
+            name="buyRange"
+            placeholder="Buy Range (Ex: 110-120)"
+            value={formData.buyRange}
+            onChange={(e) => setFormData({ ...formData, buyRange: e.target.value })}
           />
         </div>
         <div className="form-group">
           <input
             type="text"
-            name="buyRange"
-            placeholder="Buy Range"
-            value={formData.buyRange}
-            onChange={(e) => setFormData({ ...formData, buyRange: e.target.value })}
+            name="sellRange"
+            placeholder="Sell Range (Ex: 220-230)"
+            value={formData.sellRange}
+            onChange={(e) => setFormData({ ...formData, sellRange: e.target.value })}
           />
         </div>
         <button type="submit" className="submit-button">

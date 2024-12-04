@@ -67,7 +67,7 @@ const StockHeatMap = () => {
   return (
     <div className="heatmap">
       <div className="heatmap-container">
-        {stocks.map((stock) => (
+        {stocks.map.length < 0 ? (stocks.map((stock) => (
           <Link to={`/stocks/${stock.stockSymbol}`} key={stock.stockSymbol} style={{ textDecoration: "none", color: "inherit" }}>
             <div
               className="heatmap-box"
@@ -84,7 +84,9 @@ const StockHeatMap = () => {
               <div>Price: ₹{stock.currentPrice ? stock.currentPrice : "N/A"}</div>
             </div>
           </Link>
-        ))}
+        ))): (
+          <p>No stock in your portfolio at the moment.</p>
+        )}
       </div>
     </div>
   );
