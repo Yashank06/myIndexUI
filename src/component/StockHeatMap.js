@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import'./StockHeatMap.css';
+import'../StockHeatMap.css';
 
 const API_BASE_URL = "https://myindex-production.up.railway.app";
 
@@ -52,9 +52,9 @@ const StockHeatMap = () => {
     const [sellLow, sellHigh] = stock.sellRange.split("-").map(Number);
 
     if (stock.currentPrice >= buyLow && stock.currentPrice <= buyHigh) {
-      return "red"; // Buy range
+      return "#4CAF50"; // Buy range
     } else if (stock.currentPrice >= sellLow && stock.currentPrice <= sellHigh) {
-      return "green"; // Sell range
+      return "#F44336"; // Sell range
     } else {
       return "#FFB700"; // Neutral
     }
@@ -68,7 +68,7 @@ const StockHeatMap = () => {
     <div className="heatmap">
       <div className="heatmap-container">
         {stocks.map((stock) => (
-          <Link to={`/stocks/${stock.stockSymbol}`} key={stock.stockSymbol}>
+          <Link to={`/stocks/${stock.stockSymbol}`} key={stock.stockSymbol} style={{ textDecoration: "none", color: "inherit" }}>
             <div
               className="heatmap-box"
               style={{

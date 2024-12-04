@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { PieChart, Pie, Cell } from 'recharts';
-import './StockInfoPage.css'; // Import the CSS file
+import '../StockInfoPage.css'; // Import the CSS file
 
 const API_BASE_URL = "https://myindex-production.up.railway.app";
 
@@ -81,8 +81,8 @@ const StockInfoPage = () => {
   // Determine pie chart colors dynamically
   const getPieColors = () => {
     if (!stockInfo || stockPrice === null) return ["#FFB700", "#FFB700"]; // Default Yellow
-    if (isInRange(stockPrice, stockInfo.buyRange)) return ["#4CAF50", "#f5f5f5"]; // Green for buy range
-    if (isInRange(stockPrice, stockInfo.sellRange)) return ["#F44336", "#f5f5f5"]; // Red for sell range
+    if (isInRange(stockPrice, stockInfo.buyRange)) return ["#4CAF50", "#4CAF50"]; // Green for buy range
+    if (isInRange(stockPrice, stockInfo.sellRange)) return ["#F44336", "#F44336"]; // Red for sell range
     return ["#FFB700", "#FFB700"]; // Default Yellow
   };
 
@@ -133,12 +133,12 @@ const StockInfoPage = () => {
             <h4>{stockInfo.mktCap}</h4>
           </div>
           <div className="card">
-            <p>Sell Range</p>
-            <h4>{stockInfo.sellRange}</h4>
-          </div>
-          <div className="card">
             <p>Buy Range</p>
             <h4>{stockInfo.buyRange}</h4>
+          </div>
+          <div className="card">
+            <p>Sell Range</p>
+            <h4>{stockInfo.sellRange}</h4>
           </div>
         </div>
       )}

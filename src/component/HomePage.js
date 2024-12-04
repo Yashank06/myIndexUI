@@ -12,8 +12,6 @@ const HomePage = () => {
     mktCap: "",
     sellRange: "",
     buyRange: "",
-    yearlyRating: "",
-    qtrRating: "",
   });
 
   const [responseMessage, setResponseMessage] = useState("");
@@ -100,8 +98,6 @@ const HomePage = () => {
       mktCap: "",
       sellRange: "",
       buyRange: "",
-      yearlyRating: "",
-      qtrRating: "",
     });
     setSuggestions([]);
     setShowSuggestions(false);
@@ -160,15 +156,6 @@ const HomePage = () => {
         <div className="form-group">
           <input
             type="text"
-            name="mktCap"
-            placeholder="Market Cap"
-            value={formData.mktCap}
-            readOnly
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
             name="sellRange"
             placeholder="Sell Range"
             value={formData.sellRange}
@@ -184,41 +171,7 @@ const HomePage = () => {
             onChange={(e) => setFormData({ ...formData, buyRange: e.target.value })}
           />
         </div>
-          <div className="form-group">
-            <label htmlFor="yearlyRating">Yearly Rating</label>
-            <select
-              id="yearlyRating"
-              name="yearlyRating"
-              value={formData.yearlyRating}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="" disabled>Select Rating</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="qtrRating">Quarterly Rating</label>
-            <select
-              id="qtrRating"
-              name="qtrRating"
-              value={formData.qtrRating}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="" disabled>Select Rating</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </div>
-          <button type="submit" className="submit-button">
+        <button type="submit" className="submit-button">
         Submit
       </button>
       {showPopup && (
