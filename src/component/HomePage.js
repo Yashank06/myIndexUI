@@ -114,7 +114,7 @@ const HomePage = () => {
           <input
             type="text"
             name="stockName"
-            placeholder="Stock Name"
+            placeholder="Start searching your stock"
             value={formData.stockName}
             onChange={handleInputChange}
             required

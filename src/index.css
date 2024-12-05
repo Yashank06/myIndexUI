@@ -45,6 +45,7 @@ nav a.active {
     background: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    outline: none;
   }
   .form-container h1 {
     font-size: 1.5rem;
@@ -73,6 +74,7 @@ nav a.active {
     border: 1px solid #ddd;
     border-radius: 5px;
     background: #f4f4f4;
+    outline: none;
   }
   .form-group textarea {
     resize: none;
@@ -216,4 +218,13 @@ nav a.active {
 .suggestions-list li.selected {
   background-color: #d6e9ff;
   font-weight: bold;
+}
+
+a {
+  text-decoration: none; /* Remove underline if needed */
+  outline: none; /* Remove the border/outline */
+}
+
+a:focus {
+  outline: none; /* Remove focus outline */
 }
