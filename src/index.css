@@ -85,6 +85,27 @@ nav a.active {
     color: #666;
   }
 
+  .range-fields {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .range-fields input {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+
 .submit-button {
   display: block;
   width: 100%;

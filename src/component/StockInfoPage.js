@@ -134,11 +134,11 @@ const StockInfoPage = () => {
             ))}
           </Pie>
         </PieChart>
-        {stockInfo && (
+        {stockInfo && (<a href={`https://www.screener.in/company/${symbol}/consolidated/`}>
           <div className="chart-text">
             <strong>{symbol}</strong>
             <br />₹{stockPrice !== null ? stockPrice : "Loading..."}
-          </div>
+          </div></a>
         )}
       </div>
 

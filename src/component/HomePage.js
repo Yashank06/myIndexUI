@@ -10,8 +10,10 @@ const HomePage = () => {
     stockSymbol: "",
     industryType: "",
     mktCap: "",
-    sellRange: "",
-    buyRange: "",
+    buyLowerLimit: "",
+    buyUpperLimit: "",
+    sellLowerLimit: "",
+    sellUpperLimit: "",
   });
 
   const [responseMessage, setResponseMessage] = useState("");
@@ -37,6 +39,7 @@ const HomePage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     // Clear other fields if stockName is empty
     if (name === "stockName" && value.trim() === "") {
       setFormData({
@@ -44,9 +47,13 @@ const HomePage = () => {
         stockSymbol: "",
         industryType: "",
         mktCap: "",
+        buyLowerLimit: "",
+        buyUpperLimit: "",
+        sellLowerLimit: "",
+        sellUpperLimit: "",
       });
-      setSuggestions([]);  // Clear suggestions when stockName is empty
-      setShowSuggestions(false); // Hide suggestions
+      setSuggestions([]);
+      setShowSuggestions(false);
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -72,10 +79,18 @@ const HomePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Combine ranges into single fields for API payload
+    const payload = {
+      ...formData,
+      buyRange: `${formData.buyLowerLimit}-${formData.buyUpperLimit}`,
+      sellRange: `${formData.sellLowerLimit}-${formData.sellUpperLimit}`,
+    };
+
     try {
       const response = await axios.post(
         `${API_BASE_URL}/myIndex/myStock`,
-        formData,
+        payload,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -96,8 +111,10 @@ const HomePage = () => {
       stockSymbol: "",
       industryType: "",
       mktCap: "",
-      sellRange: "",
-      buyRange: "",
+      buyLowerLimit: "",
+      buyUpperLimit: "",
+      sellLowerLimit: "",
+      sellUpperLimit: "",
     });
     setSuggestions([]);
     setShowSuggestions(false);
@@ -154,25 +171,50 @@ const HomePage = () => {
           />
         </div>
         <div className="form-group">
-          <input
-            type="text"
-            name="buyRange"
-            placeholder="Buy Range (Ex: 110-120)"
-            value={formData.buyRange}
-            onChange={(e) => setFormData({ ...formData, buyRange: e.target.value })}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            name="sellRange"
-            placeholder="Sell Range (Ex: 220-230)"
-            value={formData.sellRange}
-            onChange={(e) => setFormData({ ...formData, sellRange: e.target.value })}
-          />
-        </div>
+  <label>Buy Range:</label>
+  <div className="range-fields">
+    <input
+      type="text"
+      name="buyLowerLimit"
+      placeholder="Lower Limit (e.g., 110)"
+      value={formData.buyLowerLimit || ""}
+      onChange={(e) => setFormData({ ...formData, buyLowerLimit: e.target.value })}
+      required
+    />
+    <input
+      type="text"
+      name="buyUpperLimit"
+      placeholder="Upper Limit (e.g., 120)"
+      value={formData.buyUpperLimit || ""}
+      onChange={(e) => setFormData({ ...formData, buyUpperLimit: e.target.value })}
+      required
+    />
+  </div>
+</div>
+<div className="form-group">
+  <label>Sell Range:</label>
+  <div className="range-fields">
+    <input
+      type="text"
+      name="sellLowerLimit"
+      placeholder="Lower Limit (e.g., 220)"
+      value={formData.sellLowerLimit || ""}
+      onChange={(e) => setFormData({ ...formData, sellLowerLimit: e.target.value })}
+      required
+    />
+    <input
+      type="text"
+      name="sellUpperLimit"
+      placeholder="Upper Limit (e.g., 230)"
+      value={formData.sellUpperLimit || ""}
+      onChange={(e) => setFormData({ ...formData, sellUpperLimit: e.target.value })}
+      required
+    />
+  </div>
+</div>
+
         <button type="submit" className="submit-button">
-        Submit
+        Save or Update
       </button>
       {showPopup && (
         <div className="popup">

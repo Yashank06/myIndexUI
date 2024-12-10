@@ -101,13 +101,21 @@ const StockHeatMap = () => {
                     cursor: "pointer",
                   }}
                 >
+                  <div className="price-range sell-range">
+                    {stock.sellRange
+                      ? `${stock.sellRange}`
+                      : ""}
+                  </div>
                   <strong>{stock.stockSymbol}</strong>
                   <div>₹{stock.currentPrice ? stock.currentPrice : "N/A"}</div>
+                  <div className="price-range buy-range">
+                    {stock.buyRange ? `${stock.buyRange}` : ""}
+                  </div>
                 </div>
               </Link>
             ))
           ) : (
-            <p>No stocks available in your porrfolio at the moment.</p>
+            <p>No stocks available in your portfolio at the moment.</p>
           )}
         </div>
       </div>
